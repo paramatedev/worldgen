@@ -1,0 +1,13 @@
+cloud rendering ???
+-particle based
+-camera facing
+-different sample lists
+-random
+-samples -> small cloud pics
+-geoshader vertex -> plane
+
+todo
+->fix normal edge / corner issue
+-dont use matrices
+-use mesh generated like original
+-v[0][0] = v[0][1] = v[1][0]

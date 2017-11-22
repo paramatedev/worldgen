@@ -1,0 +1,22 @@
+#version 400 core
+
+in vec3 vertex;
+in vec3 normal;
+in vec2 texCoord;
+
+out vec3 pass_normal;
+out vec2 pass_texCoord;
+
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+
+void main(void){
+	
+	vec4 worldPosition = transformationMatrix * vec4(vertex, 1.0);
+	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
+	gl_Position = projectionMatrix * positionRelativeToCamera;
+	
+	pass_normal = normal; // apply transformation
+	pass_texCoord = texCoord;
+}

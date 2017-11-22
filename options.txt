@@ -1,0 +1,12 @@
+debug: true
+width: 1280
+height: 720
+current_monitor: 0
+fullscreen: false
+vsync: false
+fov: 75.0
+tps: 60
+fps: 144
+unlimited_fps: true
+render_model: true
+render_mesh: false

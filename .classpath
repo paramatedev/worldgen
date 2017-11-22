@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="jar/lwjgl-glfw-natives-windows.jar"/>
+	<classpathentry kind="lib" path="jar/lwjgl-glfw.jar" sourcepath="doc/lwjgl-glfw-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/worldgen/doc/lwjgl-glfw-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jar/lwjgl-natives-windows.jar"/>
+	<classpathentry kind="lib" path="jar/lwjgl-openal-natives-windows.jar"/>
+	<classpathentry kind="lib" path="jar/lwjgl-openal.jar" sourcepath="doc/lwjgl-openal-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/worldgen/doc/lwjgl-openal-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jar/lwjgl-opengl-natives-windows.jar"/>
+	<classpathentry kind="lib" path="jar/lwjgl-opengl.jar" sourcepath="doc/lwjgl-opengl-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/worldgen/doc/lwjgl-opengl-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jar/lwjgl.jar" sourcepath="doc/lwjgl-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/worldgen/doc/lwjgl-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
