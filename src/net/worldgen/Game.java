@@ -182,7 +182,7 @@ public class Game implements Runnable {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				if (debug) {
-					System.out.println("TPS: " + ticks + ", FPS: " + frames);
+					System.out.println("TPS: " + ticks + ", FPS: " + frames + ", Queued: " + Handler.QUEUELENGTH);
 				}
 				frames = 0;
 				ticks = 0;
@@ -205,6 +205,7 @@ public class Game implements Runnable {
 	}
 
 	private void shutdown() {
+		handler.shutdown();
 		renderer.clearMemory();
 		Loader.clearMemory();
 

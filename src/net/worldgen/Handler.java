@@ -3,6 +3,8 @@ package net.worldgen;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.worldgen.gui.Element;
 import net.worldgen.object.Camera;
@@ -10,9 +12,15 @@ import net.worldgen.object.DirectionLight;
 import net.worldgen.object.Entity;
 import net.worldgen.object.Sun;
 import net.worldgen.object.planet.Planet;
+import net.worldgen.object.planet.PlanetData;
 import net.worldgen.util.vector.Vector3f;
 
 public class Handler {
+
+	// DATA
+	public static int QUEUELENGTH;
+
+	private ExecutorService executor;
 
 	private Camera camera;
 
@@ -27,6 +35,7 @@ public class Handler {
 	// private Model stall;
 
 	public Handler() {
+		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		// camera = new Camera(new Vector3f(-11.165606f, 47.04815f,
 		// 19.088432f),-62.999985f, 29.700012f, 0.0f);
 		camera = new Camera(new Vector3f(30, 5, 0), 9, -90, 0);
@@ -37,12 +46,13 @@ public class Handler {
 
 		loadModels();
 
-		sun = new Sun(null, new Vector3f(1,1,1), 1f);
+		sun = new Sun(null, new Vector3f(1, 1, 1), 1f);
 		dirLights.add(sun);
 
 		int max = 1;
-		for(int i = 1; i < max + 1; i++)
-			planets.add(new Planet(10, i + 8, 8, 1, 0.6f, 8, 6, "/assets/planet/grass.png", "/assets/planet/water.png", new Vector3f(25 * i - (max / 2) * 25 - 25, 0, 0), new Vector3f(0, 0, 0), 1));
+		for (int i = 1; i < max + 1; i++)
+			planets.add(new Planet(executor, camera, new PlanetData(10, 0.5f, i + 8, 8, 1), new Vector3f(0, 0, 0),
+					new Vector3f(0, 0, 0)));
 
 		// entities.add(new Entity(stall, new Vector3f(20,0,0), new Vector3f(0,180,0),
 		// 1));
@@ -56,11 +66,17 @@ public class Handler {
 	// tick
 	public void update() {
 		sun.update();
+		for (Planet planet : planets)
+			planet.update();
 	}
 
 	// frame
 	public void update(float dt) {
 		camera.update(dt);
+	}
+
+	public void shutdown() {
+		executor.shutdown();
 	}
 
 	public static InputStream getResource(String path) {
@@ -74,7 +90,7 @@ public class Handler {
 	public void removeEntity(Entity entity) {
 		entities.remove(entity);
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}

@@ -14,14 +14,14 @@ public class Plane {
 	private final int outTime = 5000; // ms
 
 	private Camera camera;
-	private Chunk chunkTree;
+	private PlaneChunk chunkTree;
 	private List<Model> models;
 
 	public Plane(Handler handler, Camera camera, float width) {
 		this.camera = camera;
 		models = new ArrayList<Model>();
-		models.add(new Model(GenChunk.genRawChunk(width), new Material("res/assets/ground.png")));
-		chunkTree = new Chunk(null, 0, width, handler, models, models.get(0), new Vector3f(-width / 2, 0, -width / 2),
+		models.add(new Model(GenPlaneChunk.genRawChunk(width), new Material("res/assets/ground.png")));
+		chunkTree = new PlaneChunk(null, 0, width, handler, models, models.get(0), new Vector3f(-width / 2, 0, -width / 2),
 				new Vector3f(0, 0, 0), 1);
 		handler.addEntity(chunkTree);
 	}
@@ -31,10 +31,10 @@ public class Plane {
 		checkChunk(chunkTree);
 	}
 
-	public void disableAll(Chunk chunk) {
+	public void disableAll(PlaneChunk chunk) {
 		chunk.disableRender();
 		if (chunk.hasChildren()) {
-			Chunk[] children = chunk.getChildren();
+			PlaneChunk[] children = chunk.getChildren();
 			if (children[0].isOutdated(outTime) && children[1].isOutdated(outTime) && children[2].isOutdated(outTime)
 					&& children[3].isOutdated(outTime))
 				chunk.deleteChildren();
@@ -45,7 +45,7 @@ public class Plane {
 		}
 	}
 
-	public void checkChunk(Chunk chunk) {
+	public void checkChunk(PlaneChunk chunk) {
 
 		float dx = chunk.getPosition().x - camera.getPosition().x + chunk.getWidth() / 2;
 		float dy = chunk.getPosition().y - camera.getPosition().y;
@@ -56,7 +56,7 @@ public class Plane {
 		if (distance / chunk.getWidth() < 1.5) {
 			if (!chunk.hasChildren())
 				chunk.createChildren();
-			Chunk[] children = chunk.getChildren();
+			PlaneChunk[] children = chunk.getChildren();
 			checkChunk(children[0]);
 			checkChunk(children[1]);
 			checkChunk(children[2]);

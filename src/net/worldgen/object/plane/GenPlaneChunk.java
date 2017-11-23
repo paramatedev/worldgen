@@ -3,7 +3,7 @@ package net.worldgen.object.plane;
 import net.worldgen.object.raw.RawModel;
 import net.worldgen.util.Loader;
 
-public class GenChunk {
+public class GenPlaneChunk {
 	
 	private static final int WIDTH = 32;
 	private static final int WIDTHP1 = WIDTH+1;
