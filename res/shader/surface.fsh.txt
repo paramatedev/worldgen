@@ -10,10 +10,8 @@ uniform sampler2D sand;
 uniform vec3 dirLightDir;
 uniform vec3 dirLightColor;
 uniform float dirLightIntensity;
-uniform float isWater;
-
-const float radius = 10;
-const float amp = 0.5;
+uniform float radius;
+uniform float amplitude;
 
 void main(void) {
 	
@@ -21,11 +19,11 @@ void main(void) {
 	brightness = clamp(brightness, 0.05, 1.0);
 	
 	vec4 textureColor = vec4(219, 220, 225, 255) / 255;	// snow
-	if(height < radius + amp * 0.03) {
+	if(height < radius + amplitude * 0.03) {
 		textureColor = vec4(225, 184, 133, 255) / 255;	// sand
-	} else if(height < radius + amp * 0.25) {
+	} else if(height < radius + amplitude * 0.25) {
 		textureColor = vec4(151, 210, 32, 255) / 255;	// grass
-	} else if(height < radius + amp * 0.6) {
+	} else if(height < radius + amplitude * 0.6) {
 		textureColor = vec4(155, 156, 158, 255) / 255;	// rock
 	}
 	

@@ -16,7 +16,7 @@ import net.worldgen.object.Entity;
 import net.worldgen.object.raw.Model;
 import net.worldgen.render.shader.EntityShader;
 import net.worldgen.render.shader.MeshShader;
-import net.worldgen.render.shader.PlanetShader;
+import net.worldgen.render.shader.SurfaceShader;
 import net.worldgen.render.shader.SkyboxShader;
 import net.worldgen.render.shader.WaterShader;
 import net.worldgen.util.Maths;
@@ -30,11 +30,9 @@ public class RenderCore {
 	private EntityShader entityShader;
 	private EntityRender entityRender;
 
-	private PlanetShader planetShader;
-	private PlanetRender planetRender;
-	
 	private WaterShader waterShader;
-	private WaterRender waterRender;
+	private SurfaceShader surfaceShader;
+	private PlanetRender planetRender;
 	
 	private MeshShader meshShader;
 	private MeshRender meshRender;
@@ -60,10 +58,9 @@ public class RenderCore {
 		this.renderMesh = renderMesh;
 		entityShader = new EntityShader();
 		entityRender = new EntityRender(entityShader);
-		planetShader = new PlanetShader();
-		planetRender = new PlanetRender(planetShader);
 		waterShader = new WaterShader();
-		waterRender = new WaterRender(waterShader);
+		surfaceShader = new SurfaceShader();
+		planetRender = new PlanetRender(surfaceShader, waterShader);
 		meshShader = new MeshShader();
 		meshRender = new MeshRender(meshShader);
 		skyboxShader = new SkyboxShader();
@@ -83,14 +80,13 @@ public class RenderCore {
 			entityRender.render(handler, this.entities, projectionMatrix);
 			entityShader.stop();
 			
-			planetShader.start();
-			planetShader.loadViewMatrix(handler.getCamera());
-			planetRender.render(handler, handler.getPlanets(), projectionMatrix);
-			planetShader.stop();
-			
+			surfaceShader.start();
+			surfaceShader.loadViewMatrix(handler.getCamera());
+			planetRender.renderSurface(handler, handler.getPlanets(), projectionMatrix);
+			surfaceShader.stop();
 			waterShader.start();
 			waterShader.loadViewMatrix(handler.getCamera());
-			waterRender.render(handler, handler.getPlanets(), projectionMatrix);
+			planetRender.renderWater(handler, handler.getPlanets(), projectionMatrix);
 			waterShader.stop();
 		}
 		if (renderMesh) {

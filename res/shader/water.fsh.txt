@@ -10,10 +10,6 @@ uniform sampler2D sand;
 uniform vec3 dirLightDir;
 uniform vec3 dirLightColor;
 uniform float dirLightIntensity;
-uniform float isWater;
-
-const float radius = 10;
-const float amp = 0.5;
 
 void main(void) {
 	

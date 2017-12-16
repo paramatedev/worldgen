@@ -5,19 +5,30 @@ import java.util.concurrent.ExecutorService;
 import net.worldgen.object.raw.RawModel;
 import net.worldgen.util.Loader;
 import net.worldgen.util.vector.Matrix4f;
+import net.worldgen.util.vector.Vector3f;
 
 public class Chunk {
 
 	private int lod;
 	private float width;
 	private float x, y;
-	private RawChunk raw;
 	private Chunk parent;
 	private Matrix4f rot;
 	private ExecutorService executor;
 	private PlanetData data;
 	private Chunk[] children;
-	
+
+	private RawModel rawSurface;
+	private ModelDataBuffer surfaceBuffer;
+	private RawModel rawWater;
+	private ModelDataBuffer waterBuffer;
+	private boolean hasWater;
+	private Vector3f pos;
+
+	private boolean generated;
+	private boolean processed;
+	private boolean interrupted;
+	private boolean render;
 	private long timer;
 
 	public Chunk(int lod, float x, float y, Chunk parent, Matrix4f rot, ExecutorService executor, PlanetData data) {
@@ -28,9 +39,10 @@ public class Chunk {
 		this.rot = rot;
 		this.executor = executor;
 		this.data = data;
+		render = false;
 		width = 2 / (float) Math.pow(2, lod);
-		raw = new RawChunk();
-		executor.submit(new GenChunk(x, y, width, raw, rot, data));
+		executor.execute(new GenChunk(x, y, width, this, rot, data));
+		setTimer();
 	}
 
 	public void createChildren() {
@@ -53,9 +65,26 @@ public class Chunk {
 	}
 
 	public void delete() {
-		if(!raw.isProcessed())
-			raw.interrupt();
-		Loader.deleteVao(raw.getVao());
+		if (processed) {
+			Loader.deleteVao(rawSurface.getVao());
+			if (hasWater)
+				Loader.deleteVao(rawWater.getVao());
+		} else
+			interrupted = true;
+	}
+
+	public void checkProgress() {
+		if (generated && !processed && !interrupted) {
+			rawSurface = Loader.loadModel(surfaceBuffer.getIndices(), surfaceBuffer.getVertices(),
+					surfaceBuffer.getNormals(), surfaceBuffer.getTexCoords());
+			surfaceBuffer = null;
+			if (hasWater) {
+				rawWater = Loader.loadModel(waterBuffer.getIndices(), waterBuffer.getVertices(),
+						waterBuffer.getNormals(), waterBuffer.getTexCoords());
+				waterBuffer = null;
+			}
+			processed = true;
+		}
 	}
 
 	public int getLod() {
@@ -63,11 +92,39 @@ public class Chunk {
 	}
 
 	public float getWidth() {
-		return width;
+		return width * data.getRadius();
 	}
 
-	public RawModel getRawChunk() {
-		return raw;
+	public void setPos(Vector3f pos) {
+		this.pos = pos;
+	}
+
+	public Vector3f getPos() {
+		return pos;
+	}
+
+	public void setSurfaceBuffer(ModelDataBuffer buffer) {
+		this.surfaceBuffer = buffer;
+	}
+
+	public void setWaterBuffer(ModelDataBuffer buffer) {
+		this.waterBuffer = buffer;
+	}
+
+	public RawModel getRawSurface() {
+		return rawSurface;
+	}
+
+	public RawModel getRawWater() {
+		return rawWater;
+	}
+
+	public void setHasWater(boolean hasWater) {
+		this.hasWater = hasWater;
+	}
+
+	public boolean hasWater() {
+		return hasWater;
 	}
 
 	public Chunk getParent() {
@@ -80,6 +137,26 @@ public class Chunk {
 
 	public Chunk[] getChildren() {
 		return children;
+	}
+
+	public void setGenerated() {
+		generated = true;
+	}
+
+	public boolean isProcessed() {
+		return processed;
+	}
+
+	public void enableRender() {
+		render = true;
+	}
+
+	public void disableRender() {
+		render = false;
+	}
+
+	public boolean shouldRender() {
+		return render;
 	}
 
 	public void setTimer() {

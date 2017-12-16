@@ -7,7 +7,7 @@ import net.worldgen.util.vector.Vector3f;
 
 public class Camera {
 
-	private final float MAX_SPEED = 25;
+	private final float MAX_SPEED = 100;
 //	private final float distance = 12;
 
 	private Vector3f position;

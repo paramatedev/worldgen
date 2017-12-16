@@ -39,6 +39,7 @@ public class Loader {
 
 	public static void init() {
 		vaos = new HashMap<Integer, List<Integer>>();
+		cvbos = new ArrayList<Integer>();
 		textures = new ArrayList<Integer>();
 	}
 

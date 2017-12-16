@@ -5,10 +5,10 @@ import net.worldgen.object.DirectionLight;
 import net.worldgen.util.Maths;
 import net.worldgen.util.vector.Matrix4f;
 
-public class PlanetShader extends ShaderProgram {
+public class SurfaceShader extends ShaderProgram {
 
-	private static final String VERTEX_PATH = "/shader/planet.vsh.txt";
-	private static final String FRAGMENT_PATH = "/shader/planet.fsh.txt";
+	private static final String VERTEX_PATH = "/shader/surface.vsh.txt";
+	private static final String FRAGMENT_PATH = "/shader/surface.fsh.txt";
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
@@ -16,8 +16,10 @@ public class PlanetShader extends ShaderProgram {
 	private int location_dirLightDir;
 	private int location_dirLightColor;
 	private int location_dirLightIntensity;
+	private int location_radius;
+	private int location_amplitude;
 	
-	public PlanetShader() {
+	public SurfaceShader() {
 		super(VERTEX_PATH, FRAGMENT_PATH);
 	}
 
@@ -36,6 +38,8 @@ public class PlanetShader extends ShaderProgram {
 		location_dirLightDir = super.getUniformLocation("dirLightDir");
 		location_dirLightColor = super.getUniformLocation("dirLightColor");
 		location_dirLightIntensity = super.getUniformLocation("dirLightIntensity");
+		location_radius = super.getUniformLocation("radius");
+		location_amplitude = super.getUniformLocation("amplitude");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
@@ -55,6 +59,14 @@ public class PlanetShader extends ShaderProgram {
 		super.loadVector(location_dirLightDir, light.getDirection());
 		super.loadVector(location_dirLightColor, light.getColor());
 		super.loadFloat(location_dirLightIntensity, light.getIntensity());
+	}
+	
+	public void loadRadius(float radius) {
+		super.loadFloat(location_radius, radius);
+	}
+	
+	public void loadAmplitude(float amplitude) {
+		super.loadFloat(location_amplitude, amplitude);
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import net.worldgen.gui.Element;
 import net.worldgen.object.Camera;
@@ -17,14 +18,8 @@ import net.worldgen.util.vector.Vector3f;
 
 public class Handler {
 
-	// DATA
-	public static int QUEUELENGTH;
-
 	private ExecutorService executor;
-
 	private Camera camera;
-
-	// Lights
 	private Sun sun;
 	private List<DirectionLight> dirLights;
 	private List<Entity> entities;
@@ -38,7 +33,8 @@ public class Handler {
 		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		// camera = new Camera(new Vector3f(-11.165606f, 47.04815f,
 		// 19.088432f),-62.999985f, 29.700012f, 0.0f);
-		camera = new Camera(new Vector3f(30, 5, 0), 9, -90, 0);
+
+		camera = new Camera(new Vector3f(0, 100, 150), 35, 0, 0);
 		dirLights = new ArrayList<DirectionLight>();
 		entities = new ArrayList<Entity>();
 		elements = new ArrayList<Element>();
@@ -50,9 +46,9 @@ public class Handler {
 		dirLights.add(sun);
 
 		int max = 1;
-		for (int i = 1; i < max + 1; i++)
-			planets.add(new Planet(executor, camera, new PlanetData(10, 0.5f, i + 8, 8, 1), new Vector3f(0, 0, 0),
-					new Vector3f(0, 0, 0)));
+		for (int i = 1; i <= max; i++)
+			planets.add(new Planet(executor, camera, new PlanetData(100, 10, i + 8, 8, 1),
+					new Vector3f(i * 250 - (max + 1) / 2f * 250, 0, 0), new Vector3f(0, 0, 0)));
 
 		// entities.add(new Entity(stall, new Vector3f(20,0,0), new Vector3f(0,180,0),
 		// 1));
@@ -66,8 +62,10 @@ public class Handler {
 	// tick
 	public void update() {
 		sun.update();
-		for (Planet planet : planets)
+		for (Planet planet : planets) {
+			// planet.rotate(new Vector3f(10 * Game.TT, 10 * Game.TT,10 * Game.TT));
 			planet.update();
+		}
 	}
 
 	// frame
@@ -75,8 +73,10 @@ public class Handler {
 		camera.update(dt);
 	}
 
-	public void shutdown() {
+	public void shutdownExecutor() throws InterruptedException {
 		executor.shutdown();
+		if(!executor.awaitTermination(500, TimeUnit.MILLISECONDS))
+			executor.shutdownNow();
 	}
 
 	public static InputStream getResource(String path) {
