@@ -85,6 +85,7 @@ public class RenderCore {
 			planetRender.renderSurface(handler, handler.getPlanets(), projectionMatrix);
 			surfaceShader.stop();
 			waterShader.start();
+			waterShader.updateTime(dt);
 			waterShader.loadViewMatrix(handler.getCamera());
 			planetRender.renderWater(handler, handler.getPlanets(), projectionMatrix);
 			waterShader.stop();

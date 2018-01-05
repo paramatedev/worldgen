@@ -24,35 +24,44 @@ public class ModelDataBuffer {
 		float[] normals = new float[this.normals.length + buffer.normals.length];
 		float[] texCoords = new float[this.texCoords.length + buffer.texCoords.length];
 		// indices
-		for (int i = 0; i < this.indices.length; i++)
-			indices[i] = this.indices[i];
-		for (int i = 0; i < buffer.indices.length; i++)
-			indices[i + this.indices.length] = buffer.indices[i] + this.vertices.length / 3;
+		if (this.indices != null) {
+			for (int i = 0; i < this.indices.length; i++)
+				indices[i] = this.indices[i];
+			for (int i = 0; i < buffer.indices.length; i++)
+				indices[i + this.indices.length] = buffer.indices[i] + this.vertices.length / 3;
+			this.indices = indices;
+		}
 		// vertices
-		for (int i = 0; i < this.vertices.length; i++)
-			vertices[i] = this.vertices[i];
-		for (int i = 0; i < buffer.vertices.length; i++)
-			vertices[i + this.vertices.length] = buffer.vertices[i];
+		if (this.vertices != null) {
+			for (int i = 0; i < this.vertices.length; i++)
+				vertices[i] = this.vertices[i];
+			for (int i = 0; i < buffer.vertices.length; i++)
+				vertices[i + this.vertices.length] = buffer.vertices[i];
+			this.vertices = vertices;
+		}
 		// normals
-		for (int i = 0; i < this.normals.length; i++)
-			normals[i] = this.normals[i];
-		for (int i = 0; i < buffer.normals.length; i++)
-			normals[i + this.normals.length] = buffer.normals[i];
+		if (this.normals != null) {
+			for (int i = 0; i < this.normals.length; i++)
+				normals[i] = this.normals[i];
+			for (int i = 0; i < buffer.normals.length; i++)
+				normals[i + this.normals.length] = buffer.normals[i];
+			this.normals = normals;
+		}
 		// texCoords
-		for (int i = 0; i < this.texCoords.length; i++)
-			texCoords[i] = this.texCoords[i];
-		for (int i = 0; i < buffer.texCoords.length; i++)
-			texCoords[i + this.texCoords.length] = buffer.texCoords[i];
-		// apply
-		this.indices = indices;
-		this.vertices = vertices;
-		this.normals = normals;
-		this.texCoords = texCoords;
+		if (this.texCoords != null) {
+			for (int i = 0; i < this.texCoords.length; i++)
+				texCoords[i] = this.texCoords[i];
+			for (int i = 0; i < buffer.texCoords.length; i++)
+				texCoords[i + this.texCoords.length] = buffer.texCoords[i];
+			this.texCoords = texCoords;
+		}
 	}
 
 	public ModelDataBuffer rotate(Matrix4f m) {
-		rotateVertices(m);
-		rotateNormals(m);
+		if (vertices != null)
+			rotateVertices(m);
+		if (normals != null)
+			rotateNormals(m);
 		return this;
 	}
 

@@ -26,6 +26,8 @@ public class Handler {
 	private List<Element> elements;
 	private List<Planet> planets;
 
+	private DataInput input;
+	
 	// Models
 	// private Model stall;
 
@@ -34,7 +36,7 @@ public class Handler {
 		// camera = new Camera(new Vector3f(-11.165606f, 47.04815f,
 		// 19.088432f),-62.999985f, 29.700012f, 0.0f);
 
-		camera = new Camera(new Vector3f(0, 100, 150), 35, 0, 0);
+		camera = new Camera(new Vector3f(0, 160, 230), 35, 0, 0);
 		dirLights = new ArrayList<DirectionLight>();
 		entities = new ArrayList<Entity>();
 		elements = new ArrayList<Element>();
@@ -47,9 +49,11 @@ public class Handler {
 
 		int max = 1;
 		for (int i = 1; i <= max; i++)
-			planets.add(new Planet(executor, camera, new PlanetData(100, 10, i + 8, 8, 1),
+			planets.add(new Planet(executor, camera, 100, new PlanetData(10,i,12,1),
 					new Vector3f(i * 250 - (max + 1) / 2f * 250, 0, 0), new Vector3f(0, 0, 0)));
 
+		input = new DataInput();
+		
 		// entities.add(new Entity(stall, new Vector3f(20,0,0), new Vector3f(0,180,0),
 		// 1));
 	}
@@ -58,9 +62,16 @@ public class Handler {
 		// stall = Loader.loadObjFile("/assets/test/stall.obj",
 		// "/assets/test/stallTexture.png");
 	}
-
+	
 	// tick
 	public void update() {
+		// update input data
+		PlanetData p = planets.get(0).getData();
+		p.setAmplitude(input.getAmplitude());
+		p.setOffset(input.getOffset());
+		p.setOctaves(input.getOctaves());
+		p.setFreq(input.getFreq());
+		
 		sun.update();
 		for (Planet planet : planets) {
 			// planet.rotate(new Vector3f(10 * Game.TT, 10 * Game.TT,10 * Game.TT));
@@ -74,6 +85,7 @@ public class Handler {
 	}
 
 	public void shutdownExecutor() throws InterruptedException {
+		input.dispose();
 		executor.shutdown();
 		if(!executor.awaitTermination(500, TimeUnit.MILLISECONDS))
 			executor.shutdownNow();

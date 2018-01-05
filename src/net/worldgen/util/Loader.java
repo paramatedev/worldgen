@@ -64,6 +64,24 @@ public class Loader {
 
 		return new RawModel(vao, indices.length);
 	}
+	
+	public static RawModel loadModel(int[] indices, float[] vertices) {
+
+		// create vao
+		int vao = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(vao);
+
+		// bind buffers
+		bindIndices(indices);
+		storeData(0, 3, vertices);
+		vaos.put(vao, cloneList(cvbos));
+		cvbos.clear();
+
+		// unbind vao
+		GL30.glBindVertexArray(0);
+
+		return new RawModel(vao, indices.length);
+	}
 
 	public static RawModel loadModel(float[] vertices, int dim) {
 

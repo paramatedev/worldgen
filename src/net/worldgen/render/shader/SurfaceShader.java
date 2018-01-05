@@ -2,6 +2,7 @@ package net.worldgen.render.shader;
 
 import net.worldgen.object.Camera;
 import net.worldgen.object.DirectionLight;
+import net.worldgen.object.planet.PlanetData;
 import net.worldgen.util.Maths;
 import net.worldgen.util.vector.Matrix4f;
 
@@ -18,6 +19,9 @@ public class SurfaceShader extends ShaderProgram {
 	private int location_dirLightIntensity;
 	private int location_radius;
 	private int location_amplitude;
+	private int location_offset;
+	private int location_octaves;
+	private int location_freq;
 	
 	public SurfaceShader() {
 		super(VERTEX_PATH, FRAGMENT_PATH);
@@ -26,8 +30,6 @@ public class SurfaceShader extends ShaderProgram {
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "vertex");
-		super.bindAttribute(1, "normal");
-		super.bindAttribute(2, "texCoord");
 	}
 	
 	@Override
@@ -40,6 +42,9 @@ public class SurfaceShader extends ShaderProgram {
 		location_dirLightIntensity = super.getUniformLocation("dirLightIntensity");
 		location_radius = super.getUniformLocation("radius");
 		location_amplitude = super.getUniformLocation("amplitude");
+		location_offset = super.getUniformLocation("offset");
+		location_octaves = super.getUniformLocation("octaves");
+		location_freq = super.getUniformLocation("freq");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
@@ -65,8 +70,11 @@ public class SurfaceShader extends ShaderProgram {
 		super.loadFloat(location_radius, radius);
 	}
 	
-	public void loadAmplitude(float amplitude) {
-		super.loadFloat(location_amplitude, amplitude);
+	public void loadPlanetData(PlanetData data) {
+		super.loadFloat(location_amplitude, data.getAmplitude());
+		super.loadFloat(location_offset, data.getOffset());
+		super.loadInt(location_octaves, data.getOctaves());
+		super.loadFloat(location_freq, data.getFreq());
 	}
 	
 }

@@ -54,8 +54,7 @@ public class MeshRender {
 			if (!chunk.isProcessed())
 				return;
 			renderChunkModel(chunk.getRawSurface());
-			if(chunk.hasWater())
-				renderChunkModel(chunk.getRawWater());
+			renderChunkModel(chunk.getRawWater());
 			return;
 		}
 		if (chunk.hasChildren())

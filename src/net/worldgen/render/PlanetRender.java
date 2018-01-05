@@ -30,8 +30,8 @@ public class PlanetRender {
 		surfaceShader.loadProjectionMatrix(projectionMatrix);
 		surfaceShader.loadDirLight(handler.getSun());
 		for (Planet planet : planets) {
-			surfaceShader.loadRadius(planet.getData().getRadius());
-			surfaceShader.loadAmplitude(planet.getData().getAmplitude());
+			surfaceShader.loadRadius(planet.getRadius());
+			surfaceShader.loadPlanetData(planet.getData());
 			Matrix4f transformationMatrix = Maths.createTransformationMatrix(planet.getPos(), planet.getRot(), 1);
 			surfaceShader.loadTransformationMatrix(transformationMatrix);
 			for (Chunk face : planet.getFaces()) {
@@ -66,7 +66,7 @@ public class PlanetRender {
 	}
 
 	public void renderWaterChunk(Chunk chunk) {
-		if (chunk.shouldRender() && chunk.hasWater()) {
+		if (chunk.shouldRender()) {
 			if (!chunk.isProcessed())
 				return;
 			bindModel(chunk.getRawWater());

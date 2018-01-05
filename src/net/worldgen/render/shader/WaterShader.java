@@ -16,6 +16,9 @@ public class WaterShader extends ShaderProgram {
 	private int location_dirLightDir;
 	private int location_dirLightColor;
 	private int location_dirLightIntensity;
+	private int location_time;
+	
+	private float time;
 	
 	public WaterShader() {
 		super(VERTEX_PATH, FRAGMENT_PATH);
@@ -36,6 +39,7 @@ public class WaterShader extends ShaderProgram {
 		location_dirLightDir = super.getUniformLocation("dirLightDir");
 		location_dirLightColor = super.getUniformLocation("dirLightColor");
 		location_dirLightIntensity = super.getUniformLocation("dirLightIntensity");
+		location_time = super.getUniformLocation("time");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
@@ -55,6 +59,11 @@ public class WaterShader extends ShaderProgram {
 		super.loadVector(location_dirLightDir, light.getDirection());
 		super.loadVector(location_dirLightColor, light.getColor());
 		super.loadFloat(location_dirLightIntensity, light.getIntensity());
+	}
+	
+	public void updateTime(float dt) {
+		time += dt;
+		super.loadFloat(location_time, time);
 	}
 	
 }

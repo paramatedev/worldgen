@@ -14,13 +14,15 @@ public class Planet {
 	private Vector3f pos;
 	private Vector3f rot;
 	private Camera camera;
+	private float radius;
 	private PlanetData data;
 	private Chunk[] faces;
 	private Matrix4f transformation;
 	private int index;
 
-	public Planet(ExecutorService executor, Camera camera, PlanetData data, Vector3f pos, Vector3f rot) {
+	public Planet(ExecutorService executor, Camera camera, float radius, PlanetData data, Vector3f pos, Vector3f rot) {
 		this.camera = camera;
+		this.radius = radius;
 		this.data = data;
 		this.pos = pos;
 		this.rot = rot;
@@ -41,12 +43,12 @@ public class Planet {
 		m6.rotate((float) -Math.PI, new Vector3f(0, 1, 0));
 		
 		faces = new Chunk[6];
-		faces[0] = new Chunk(0, 0, 0, null, m1, executor, data);
-		faces[1] = new Chunk(0, 0, 0, null, m2, executor, data);
-		faces[2] = new Chunk(0, 0, 0, null, m3, executor, data);
-		faces[3] = new Chunk(0, 0, 0, null, m4, executor, data);
-		faces[4] = new Chunk(0, 0, 0, null, m5, executor, data);
-		faces[5] = new Chunk(0, 0, 0, null, m6, executor, data);
+		faces[0] = new Chunk(0, 0, 0, null, m1, executor, radius);
+		faces[1] = new Chunk(0, 0, 0, null, m2, executor, radius);
+		faces[2] = new Chunk(0, 0, 0, null, m3, executor, radius);
+		faces[3] = new Chunk(0, 0, 0, null, m4, executor, radius);
+		faces[4] = new Chunk(0, 0, 0, null, m5, executor, radius);
+		faces[5] = new Chunk(0, 0, 0, null, m6, executor, radius);
 	}
 
 	public void update() {
@@ -123,7 +125,11 @@ public class Planet {
 	public Vector3f getRot() {
 		return rot;
 	}
-
+	
+	public float getRadius() {
+		return radius;
+	}
+	
 	public PlanetData getData() {
 		return data;
 	}

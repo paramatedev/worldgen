@@ -4,25 +4,34 @@ import java.util.Random;
 
 public class PlanetData {
 
-	private float radius;
 	private float amplitude;
-
-	// noise
 	private float offset;
 	private int octaves;
 	private float freq;
 
-	public PlanetData(float radius, float amplitude, int seed, int octaves, float freq) {
-		super();
-		this.radius = radius;
+	public PlanetData() {}
+	
+	public PlanetData(float amplitude, int seed, int octaves, float freq) {
 		this.amplitude = amplitude;
 		this.offset = new Random(seed).nextFloat() * Short.MAX_VALUE;
 		this.octaves = octaves;
 		this.freq = freq;
 	}
 
-	public float getRadius() {
-		return radius;
+	public void setAmplitude(float amplitude) {
+		this.amplitude = amplitude;
+	}
+
+	public void setOffset(float offset) {
+		this.offset = offset;
+	}
+
+	public void setOctaves(int octaves) {
+		this.octaves = octaves;
+	}
+
+	public void setFreq(float freq) {
+		this.freq = freq;
 	}
 
 	public float getAmplitude() {

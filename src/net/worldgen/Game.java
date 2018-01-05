@@ -27,7 +27,7 @@ public class Game implements Runnable {
 	// core
 	private final String VERSION = "0.1.0";
 	private Thread core;
-	private boolean running;
+	private static boolean running;
 	private Options options;
 	private boolean debug;
 
@@ -56,7 +56,7 @@ public class Game implements Runnable {
 		core.start();
 	}
 
-	public synchronized void stop() {
+	public static synchronized void stop() {
 		running = false;
 	}
 
@@ -217,6 +217,7 @@ public class Game implements Runnable {
 		GLFW.glfwDestroyWindow(window);
 		GLFW.glfwTerminate();
 		GLFW.glfwSetErrorCallback(null).free();
+		System.out.println("shutdown successful!");
 	}
 
 	public String getVersion() {
