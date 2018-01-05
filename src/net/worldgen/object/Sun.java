@@ -5,7 +5,7 @@ import net.worldgen.util.vector.Vector3f;
 
 public class Sun extends DirectionLight {
 
-	public static final float ROTATION_SPEED = 0;
+	public static final float ROTATION_SPEED = 100;
 	private float rotation;
 
 	public Sun(Vector3f dir, Vector3f color, float intensity) {

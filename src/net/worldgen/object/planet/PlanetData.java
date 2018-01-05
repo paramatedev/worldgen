@@ -8,14 +8,17 @@ public class PlanetData {
 	private float offset;
 	private int octaves;
 	private float freq;
+	private float normalDetail;
 
-	public PlanetData() {}
-	
-	public PlanetData(float amplitude, int seed, int octaves, float freq) {
+	public PlanetData() {
+	}
+
+	public PlanetData(float amplitude, int seed, int octaves, float freq, float normalDetail) {
 		this.amplitude = amplitude;
 		this.offset = new Random(seed).nextFloat() * Short.MAX_VALUE;
 		this.octaves = octaves;
 		this.freq = freq;
+		this.normalDetail = normalDetail;
 	}
 
 	public void setAmplitude(float amplitude) {
@@ -34,6 +37,10 @@ public class PlanetData {
 		this.freq = freq;
 	}
 
+	public void setNormalDetail(float normalDetail) {
+		this.normalDetail = normalDetail;
+	}
+
 	public float getAmplitude() {
 		return amplitude;
 	}
@@ -48,6 +55,10 @@ public class PlanetData {
 
 	public float getFreq() {
 		return freq;
+	}
+
+	public float getNormalDetail() {
+		return normalDetail;
 	}
 
 }

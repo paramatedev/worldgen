@@ -6,24 +6,28 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.worldgen.object.planet.PlanetData;
+
 public class DataInput implements WindowListener, ChangeListener {
+
+	private final int count = 5;
 
 	private JFrame frame;
 	private JPanel panel;
-	private JSlider slider1;
-	private JSlider slider2;
-	private JSlider slider3;
-	private JSlider slider4;
+	private JLabel[] label;
+	private JSlider[] slider;
 
 	private float amplitude;
 	private float offset;
 	private int octaves;
 	private float freq;
+	private float normalDetail;
 
 	public DataInput() {
 		frame = new JFrame();
@@ -32,34 +36,47 @@ public class DataInput implements WindowListener, ChangeListener {
 
 		panel = new JPanel();
 		panel.setSize(200, 200);
-		panel.setLayout(new GridLayout(2, 1, 0, 10));
+		panel.setLayout(new GridLayout(count * 2, 1, 0, 10));
 		panel.setBackground(Color.WHITE);
 		frame.add(panel);
 
+		label = new JLabel[count];
+		slider = new JSlider[count];
+
 		// amplitude
-		slider1 = new JSlider(JSlider.HORIZONTAL, 0, 1000, 500);
-		slider1.addChangeListener(this);
-		panel.add(slider1);
-		amplitude = slider1.getValue() * 0.01f;
+		slider[0] = new JSlider(JSlider.HORIZONTAL, 0, 1000, 500);
+		slider[0].addChangeListener(this);
+		amplitude = slider[0].getValue() * 0.01f;
+		label[0] = new JLabel("Amplitude: " + amplitude);
 
 		// offset
-		slider2 = new JSlider(JSlider.HORIZONTAL, 0, 50, 0);
-		slider2.addChangeListener(this);
-		panel.add(slider2);
-		offset = slider2.getValue() * 2;
+		slider[1] = new JSlider(JSlider.HORIZONTAL, 0, 50, 0);
+		slider[1].addChangeListener(this);
+		offset = slider[1].getValue() * 2;
+		label[1] = new JLabel("Offset: " + (int) offset);
 
 		// octaves
-		slider3 = new JSlider(JSlider.HORIZONTAL, 0, 16, 16);
-		slider3.addChangeListener(this);
-		panel.add(slider3);
-		octaves = slider3.getValue();
+		slider[2] = new JSlider(JSlider.HORIZONTAL, 0, 16, 16);
+		slider[2].addChangeListener(this);
+		octaves = slider[2].getValue();
+		label[2] = new JLabel("Octaves: " + octaves);
 
 		// freq
-		slider4 = new JSlider(JSlider.HORIZONTAL, 1, 100, 26);
-		slider4.addChangeListener(this);
-		panel.add(slider4);
-		freq = slider4.getValue() * 0.1f;
+		slider[3] = new JSlider(JSlider.HORIZONTAL, 1, 1000, 260);
+		slider[3].addChangeListener(this);
+		freq = slider[3].getValue() * 0.01f;
+		label[3] = new JLabel("Frequency: " + freq);
 
+		// normalDetail
+		slider[4] = new JSlider(JSlider.HORIZONTAL, 1, 500, 200);
+		slider[4].addChangeListener(this);
+		normalDetail = slider[4].getValue() * 0.0001f;
+		label[4] = new JLabel("Normal Detail: " + normalDetail);
+
+		for (int i = 0; i < count; i++) {
+			panel.add(label[i]);
+			panel.add(slider[i]);
+		}
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -70,14 +87,34 @@ public class DataInput implements WindowListener, ChangeListener {
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		if (e.getSource().equals(slider1))
-			amplitude = slider1.getValue() * 0.01f;
-		if (e.getSource().equals(slider2))
-			offset = slider2.getValue() * 2;
-		if (e.getSource().equals(slider3))
-			octaves = slider3.getValue();
-		if (e.getSource().equals(slider4))
-			freq = slider4.getValue() * 0.1f;
+		if (e.getSource().equals(slider[0])) {
+			amplitude = slider[0].getValue() * 0.01f;
+			label[0].setText("Amplitude: " + amplitude);
+		}
+		if (e.getSource().equals(slider[1])) {
+			offset = slider[1].getValue() * 2;
+			label[1].setText("Offset: " + (int) offset);
+		}
+		if (e.getSource().equals(slider[2])) {
+			octaves = slider[2].getValue();
+			label[2].setText("Octaves: " + octaves);
+		}
+		if (e.getSource().equals(slider[3])) {
+			freq = slider[3].getValue() * 0.01f;
+			label[3].setText("Frequency: " + freq);
+		}
+		if (e.getSource().equals(slider[4])) {
+			normalDetail = slider[4].getValue() * 0.0001f;
+			label[4].setText("Normal Detail: " + normalDetail);
+		}
+	}
+
+	public void applyData(PlanetData data) {
+		data.setAmplitude(amplitude);
+		data.setOffset(offset);
+		data.setOctaves(octaves);
+		data.setFreq(freq);
+		data.setNormalDetail(normalDetail);
 	}
 
 	public float getAmplitude() {
@@ -94,6 +131,10 @@ public class DataInput implements WindowListener, ChangeListener {
 
 	public float getFreq() {
 		return freq;
+	}
+
+	public float getNormalDetail() {
+		return normalDetail;
 	}
 
 	@Override

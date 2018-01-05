@@ -13,16 +13,16 @@ uniform float dirLightIntensity;
 
 void main(void) {
 	
-	//float brightness = dot(pass_normal, -dirLightDir) * dirLightIntensity;
-	//brightness = clamp(brightness, 0.05, 1.0);
+	float brightness = dot(pass_normal, -dirLightDir) * dirLightIntensity;
+	brightness = clamp(brightness, 0.05, 1.0);
 	
 	//vec4 textureColor = vec4(12, 148, 180, 120) / 255;
 	
-	//vec3 diffuse = dirLightColor * brightness;
+	vec3 diffuse = dirLightColor * brightness;
 	
-	//out_Color = textureColor; // out_Color = vec4(diffuse, 1.0) * textureColor;#
+	//out_Color = textureColor; // out_Color = vec4(diffuse, 1.0) * textureColor;
 	
 	float mnoise = (noise + 1.0) * 0.05 + 1;
 	
-	out_Color = vec4(12 * mnoise, 148 * mnoise, 180 * mnoise, 120) / 255;
+	out_Color = vec4(diffuse, 1.0) * vec4(12 * mnoise, 148 * mnoise, 180 * mnoise, 120) / 255;
 }

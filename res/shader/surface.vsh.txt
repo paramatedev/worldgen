@@ -9,13 +9,14 @@
 	uniform mat4 projectionMatrix;
 	uniform mat4 viewMatrix;
 	
+	uniform int lod;
+	
 	uniform float radius;
 	uniform float amplitude;
 	uniform float offset;
 	uniform int octaves;
 	uniform float freq;
-	
-	
+	uniform float normalDetail;
 	
 	//	Simplex 3D Noise 
 	//	by Ian McEwan, Ashima Arts
@@ -193,13 +194,32 @@
 	
 	void main(void){
 		// vertex
-		height = radius + sigmoid(noise(vertex + vec3(float(offset), 0.0, 0.0))) * amplitude;
-		vec3 vert = vertex * height;
-		vec4 worldPosition = transformationMatrix * vec4(vert, 1.0);
+		vec3 offVec = vec3(offset, 0.0, 0.0);
+		height = radius + sigmoid(noise(vertex + offVec)) * amplitude;
+		vec3 p = vertex * height;
+		vec4 worldPosition = transformationMatrix * vec4(p, 1.0);
 		vec4 positionRelativeToCamera = viewMatrix * worldPosition;
 		gl_Position = projectionMatrix * positionRelativeToCamera;
 		
 		// normal
-		//normal = calcFaceNormal(vert);
-		normal = vec3(0.0, 0.0, 0.0);
+		float detail = normalDetail; //float detail = normalDetail * (0.5 + 0.5 * (1.0 / (1.0 + exp(float(lod) - 7.0))));
+		vec3 a = normalize(cross(vertex, vec3(1.0,0.0,0.0))) * detail;
+		vec3 b = normalize(cross(vertex, a)) * detail;
+		
+		vec3 np1 = normalize(vertex + a);
+		vec3 np2 = normalize(vertex - a);
+		vec3 np3 = normalize(vertex + b);
+		vec3 np4 = normalize(vertex - b);
+		
+		vec3 p1 = np1 * (radius + sigmoid(noise(np1 + offVec)) * amplitude);
+		vec3 p2 = np2 * (radius + sigmoid(noise(np2 + offVec)) * amplitude);
+		vec3 p3 = np3 * (radius + sigmoid(noise(np3 + offVec)) * amplitude);
+		vec3 p4 = np4 * (radius + sigmoid(noise(np4 + offVec)) * amplitude);
+		
+		normal += faceNormal(p,p1,p3);
+		normal += faceNormal(p,p4,p1);
+		normal += faceNormal(p,p2,p4);
+		normal += faceNormal(p,p3,p2);
+		
+		normal = normalize(normal);
 	}

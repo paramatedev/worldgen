@@ -49,7 +49,7 @@ public class Handler {
 
 		int max = 1;
 		for (int i = 1; i <= max; i++)
-			planets.add(new Planet(executor, camera, 100, new PlanetData(10,i,12,1),
+			planets.add(new Planet(executor, camera, 100, new PlanetData(10,i,12,1, 0.02f),
 					new Vector3f(i * 250 - (max + 1) / 2f * 250, 0, 0), new Vector3f(0, 0, 0)));
 
 		input = new DataInput();
@@ -66,12 +66,7 @@ public class Handler {
 	// tick
 	public void update() {
 		// update input data
-		PlanetData p = planets.get(0).getData();
-		p.setAmplitude(input.getAmplitude());
-		p.setOffset(input.getOffset());
-		p.setOctaves(input.getOctaves());
-		p.setFreq(input.getFreq());
-		
+		input.applyData(planets.get(0).getData());
 		sun.update();
 		for (Planet planet : planets) {
 			// planet.rotate(new Vector3f(10 * Game.TT, 10 * Game.TT,10 * Game.TT));

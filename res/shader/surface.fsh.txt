@@ -14,8 +14,8 @@ uniform float amplitude;
 
 void main(void) {
 	
-	//float brightness = dot(normal, -dirLightDir) * dirLightIntensity;
-	//brightness = clamp(brightness, 0.05, 1.0);
+	float brightness = dot(normal, -dirLightDir) * dirLightIntensity;
+	brightness = clamp(brightness, 0.05, 1.0);
 	
 	vec4 textureColor = vec4(219, 220, 225, 255) / 255.0;	// snow
 	if(height < radius + amplitude * 0.03) {
@@ -26,8 +26,8 @@ void main(void) {
 		textureColor = vec4(155, 156, 158, 255) / 255.0;	// rock
 	}
 	
-	//vec3 diffuse = dirLightColor * brightness;
-	//out_Color = vec4(diffuse, 1.0) * textureColor;
+	vec3 diffuse = dirLightColor * brightness;
+	out_Color = vec4(diffuse, 1.0) * textureColor;
 	
-	out_Color = textureColor;
+	//out_Color = textureColor;
 }

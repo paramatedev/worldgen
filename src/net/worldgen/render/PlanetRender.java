@@ -56,6 +56,7 @@ public class PlanetRender {
 		if (chunk.shouldRender()) {
 			if (!chunk.isProcessed())
 				return;
+			surfaceShader.loadLod(chunk.getLod());
 			bindModel(chunk.getRawSurface());
 			GL11.glDrawElements(GL11.GL_TRIANGLES, chunk.getRawSurface().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			unbindModel();
