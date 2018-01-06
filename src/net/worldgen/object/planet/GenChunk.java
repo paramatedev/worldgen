@@ -18,14 +18,16 @@ public class GenChunk implements Runnable {
 	private Matrix4f m;
 
 	private float radius;
+	private boolean hasWater;
 
-	public GenChunk(float x, float y, float width, Chunk chunk, Matrix4f m, float radius) {
+	public GenChunk(float x, float y, float width, Chunk chunk, Matrix4f m, float radius, boolean hasWater) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.chunk = chunk;
 		this.m = m;
 		this.radius = radius;
+		this.hasWater = hasWater;
 	}
 
 	@Override
@@ -42,25 +44,25 @@ public class GenChunk implements Runnable {
 				i = (y * SIZEP2 + x) * 3;
 
 				float[] v = new float[3];
-				if(x == 1) {
+				if (x == 1) {
 					v[0] = (this.x + width / SIZEM1 * (x - 1)) - 1;
 					v[1] = 1 - (this.y + width / SIZEM1 * (y - 1));
 					v[2] = 1;
 					v = normalize(v);
 					v = scale(v, 0.9f);
-				} else if(x == SIZEP2) {
+				} else if (x == SIZEP2) {
 					v[0] = (this.x + width / SIZEM1 * (x - 3)) - 1;
 					v[1] = 1 - (this.y + width / SIZEM1 * (y - 1));
 					v[2] = 1;
 					v = normalize(v);
 					v = scale(v, 0.9f);
-				} else if(y == 0) {
+				} else if (y == 0) {
 					v[0] = (this.x + width / SIZEM1 * (x - 2)) - 1;
 					v[1] = 1 - (this.y + width / SIZEM1 * (y));
 					v[2] = 1;
 					v = normalize(v);
 					v = scale(v, 0.9f);
-				} else if(y == SIZEP1) {
+				} else if (y == SIZEP1) {
 					v[0] = (this.x + width / SIZEM1 * (x - 2)) - 1;
 					v[1] = 1 - (this.y + width / SIZEM1 * (y - 2));
 					v[2] = 1;
@@ -75,7 +77,7 @@ public class GenChunk implements Runnable {
 				vertices[i - 3] = v[0];
 				vertices[i - 2] = v[1];
 				vertices[i - 1] = v[2];
-				
+
 				if (x < SIZEP2 && y < SIZEP1) {
 					i3 = (y * SIZEP1 + x) * 6;
 
@@ -109,7 +111,8 @@ public class GenChunk implements Runnable {
 		pos = rotate(m, scale(normalize(pos), radius));
 		chunk.setPos(new Vector3f(pos[0], pos[1], pos[2]));
 		chunk.setSurfaceBuffer(new ModelDataBuffer(indices, vertices, null, null).rotate(m));
-		chunk.setWaterBuffer(generateWater());
+		if (hasWater)
+			chunk.setWaterBuffer(generateWater());
 		chunk.setGenerated();
 	}
 
@@ -163,7 +166,7 @@ public class GenChunk implements Runnable {
 				v[0] = (this.x + width / WSIZEM1 * (x - 1)) - 1;
 				v[1] = 1 - (this.y + width / WSIZEM1 * y);
 				v[2] = 1;
-				v = scale(normalize(v), radius);
+				v = normalize(v);
 				vertices[i - 3] = v[0];
 				vertices[i - 2] = v[1];
 				vertices[i - 1] = v[2];

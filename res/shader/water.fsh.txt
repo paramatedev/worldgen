@@ -11,6 +11,8 @@ uniform vec3 dirLightDir;
 uniform vec3 dirLightColor;
 uniform float dirLightIntensity;
 
+uniform vec4 colorWater;
+
 void main(void) {
 	
 	float brightness = dot(pass_normal, -dirLightDir) * dirLightIntensity;
@@ -24,5 +26,5 @@ void main(void) {
 	
 	float mnoise = (noise + 1.0) * 0.05 + 1;
 	
-	out_Color = vec4(diffuse, 1.0) * vec4(12 * mnoise, 148 * mnoise, 180 * mnoise, 120) / 255;
+	out_Color = vec4(diffuse, 1.0) * colorWater * mnoise;
 }

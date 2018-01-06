@@ -12,18 +12,23 @@ uniform float dirLightIntensity;
 uniform float radius;
 uniform float amplitude;
 
+uniform vec4 color1;
+uniform vec4 color2;
+uniform vec4 color3;
+uniform vec4 color4;
+
 void main(void) {
 	
 	float brightness = dot(normal, -dirLightDir) * dirLightIntensity;
 	brightness = clamp(brightness, 0.05, 1.0);
 	
-	vec4 textureColor = vec4(219, 220, 225, 255) / 255.0;	// snow
+	vec4 textureColor = color4;
 	if(height < radius + amplitude * 0.03) {
-		textureColor = vec4(225, 184, 133, 255) / 255.0;	// sand
+		textureColor = color1;
 	} else if(height < radius + amplitude * 0.25) {
-		textureColor = vec4(151, 210, 32, 255) / 255.0;	// grass
+		textureColor = color2;
 	} else if(height < radius + amplitude * 0.6) {
-		textureColor = vec4(155, 156, 158, 255) / 255.0;	// rock
+		textureColor = color3;
 	}
 	
 	vec3 diffuse = dirLightColor * brightness;

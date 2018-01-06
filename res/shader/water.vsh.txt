@@ -11,7 +11,11 @@ out float noise;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
+uniform float radius;
 uniform float time;
+
+uniform float amplitude;
+uniform float freq;
 
 
 //	Classic Perlin 4D Noise 
@@ -158,8 +162,8 @@ float cnoise(vec4 P){
 
 void main(void){
 	
-	noise = cnoise(vec4(vertex, time));
-	float height = 1 + noise * 0.001;
+	noise = cnoise(vec4(vertex * freq, time));
+	float height = radius + noise * amplitude;
 	
 	vec4 worldPosition = transformationMatrix * vec4(vertex * height, 1.0);
 	vec4 positionRelativeToCamera = viewMatrix * worldPosition;

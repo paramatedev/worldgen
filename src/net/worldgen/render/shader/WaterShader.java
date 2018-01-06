@@ -2,6 +2,7 @@ package net.worldgen.render.shader;
 
 import net.worldgen.object.Camera;
 import net.worldgen.object.DirectionLight;
+import net.worldgen.object.planet.PlanetData;
 import net.worldgen.util.Maths;
 import net.worldgen.util.vector.Matrix4f;
 
@@ -16,7 +17,11 @@ public class WaterShader extends ShaderProgram {
 	private int location_dirLightDir;
 	private int location_dirLightColor;
 	private int location_dirLightIntensity;
+	private int location_radius;
 	private int location_time;
+	private int location_amplitude;
+	private int location_freq;
+	private int location_colorWater;
 	
 	private float time;
 	
@@ -39,7 +44,11 @@ public class WaterShader extends ShaderProgram {
 		location_dirLightDir = super.getUniformLocation("dirLightDir");
 		location_dirLightColor = super.getUniformLocation("dirLightColor");
 		location_dirLightIntensity = super.getUniformLocation("dirLightIntensity");
+		location_radius = super.getUniformLocation("radius");
 		location_time = super.getUniformLocation("time");
+		location_amplitude = super.getUniformLocation("amplitude");
+		location_freq = super.getUniformLocation("freq");
+		location_colorWater = super.getUniformLocation("colorWater");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
@@ -61,9 +70,19 @@ public class WaterShader extends ShaderProgram {
 		super.loadFloat(location_dirLightIntensity, light.getIntensity());
 	}
 	
+	public void loadRadius(float radius) {
+		super.loadFloat(location_radius, radius);
+	}
+	
 	public void updateTime(float dt) {
 		time += dt;
 		super.loadFloat(location_time, time);
+	}
+	
+	public void loadPlanetData(PlanetData data) {
+		super.loadFloat(location_amplitude, data.getWaterAmplitude());
+		super.loadFloat(location_freq, data.getWaterFreq());
+		super.loadVector(location_colorWater, data.getColorWater());
 	}
 	
 }

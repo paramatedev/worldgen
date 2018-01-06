@@ -24,6 +24,10 @@ public class SurfaceShader extends ShaderProgram {
 	private int location_octaves;
 	private int location_freq;
 	private int location_normalDetail;
+	private int location_color1;
+	private int location_color2;
+	private int location_color3;
+	private int location_color4;
 	
 	public SurfaceShader() {
 		super(VERTEX_PATH, FRAGMENT_PATH);
@@ -49,6 +53,10 @@ public class SurfaceShader extends ShaderProgram {
 		location_octaves = super.getUniformLocation("octaves");
 		location_freq = super.getUniformLocation("freq");
 		location_normalDetail = super.getUniformLocation("normalDetail");
+		location_color1 = super.getUniformLocation("color1");
+		location_color2 = super.getUniformLocation("color2");
+		location_color3 = super.getUniformLocation("color3");
+		location_color4 = super.getUniformLocation("color4");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
@@ -84,6 +92,10 @@ public class SurfaceShader extends ShaderProgram {
 		super.loadInt(location_octaves, data.getOctaves());
 		super.loadFloat(location_freq, data.getFreq());
 		super.loadFloat(location_normalDetail, data.getNormalDetail());
+		super.loadVector(location_color1, data.getColor1());
+		super.loadVector(location_color2, data.getColor2());
+		super.loadVector(location_color3, data.getColor3());
+		super.loadVector(location_color4, data.getColor4());
 	}
 	
 }

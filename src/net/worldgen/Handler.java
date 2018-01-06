@@ -27,7 +27,7 @@ public class Handler {
 	private List<Planet> planets;
 
 	private DataInput input;
-	
+
 	// Models
 	// private Model stall;
 
@@ -49,11 +49,11 @@ public class Handler {
 
 		int max = 1;
 		for (int i = 1; i <= max; i++)
-			planets.add(new Planet(executor, camera, 100, new PlanetData(10,i,12,1, 0.02f),
+			planets.add(new Planet(executor, camera, 100, new PlanetData(true, 5, i, 12, 1, 0.02f, 0.1f, 100),
 					new Vector3f(i * 250 - (max + 1) / 2f * 250, 0, 0), new Vector3f(0, 0, 0)));
 
 		input = new DataInput();
-		
+
 		// entities.add(new Entity(stall, new Vector3f(20,0,0), new Vector3f(0,180,0),
 		// 1));
 	}
@@ -62,7 +62,7 @@ public class Handler {
 		// stall = Loader.loadObjFile("/assets/test/stall.obj",
 		// "/assets/test/stallTexture.png");
 	}
-	
+
 	// tick
 	public void update() {
 		// update input data
@@ -82,7 +82,7 @@ public class Handler {
 	public void shutdownExecutor() throws InterruptedException {
 		input.dispose();
 		executor.shutdown();
-		if(!executor.awaitTermination(500, TimeUnit.MILLISECONDS))
+		if (!executor.awaitTermination(500, TimeUnit.MILLISECONDS))
 			executor.shutdownNow();
 	}
 

@@ -44,8 +44,12 @@ public class PlanetRender {
 		waterShader.loadProjectionMatrix(projectionMatrix);
 		waterShader.loadDirLight(handler.getSun());
 		for (Planet planet : planets) {
+			if(!planet.getData().hasWater())
+				continue;
 			Matrix4f transformationMatrix = Maths.createTransformationMatrix(planet.getPos(), planet.getRot(), 1);
 			waterShader.loadTransformationMatrix(transformationMatrix);
+			waterShader.loadRadius(planet.getRadius());
+			waterShader.loadPlanetData(planet.getData());
 			for (Chunk face : planet.getFaces()) {
 				renderWaterChunk(face);
 			}

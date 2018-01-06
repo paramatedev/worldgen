@@ -43,12 +43,12 @@ public class Planet {
 		m6.rotate((float) -Math.PI, new Vector3f(0, 1, 0));
 		
 		faces = new Chunk[6];
-		faces[0] = new Chunk(0, 0, 0, null, m1, executor, radius);
-		faces[1] = new Chunk(0, 0, 0, null, m2, executor, radius);
-		faces[2] = new Chunk(0, 0, 0, null, m3, executor, radius);
-		faces[3] = new Chunk(0, 0, 0, null, m4, executor, radius);
-		faces[4] = new Chunk(0, 0, 0, null, m5, executor, radius);
-		faces[5] = new Chunk(0, 0, 0, null, m6, executor, radius);
+		faces[0] = new Chunk(0, 0, 0, null, m1, executor, radius, data.hasWater());
+		faces[1] = new Chunk(0, 0, 0, null, m2, executor, radius, data.hasWater());
+		faces[2] = new Chunk(0, 0, 0, null, m3, executor, radius, data.hasWater());
+		faces[3] = new Chunk(0, 0, 0, null, m4, executor, radius, data.hasWater());
+		faces[4] = new Chunk(0, 0, 0, null, m5, executor, radius, data.hasWater());
+		faces[5] = new Chunk(0, 0, 0, null, m6, executor, radius, data.hasWater());
 	}
 
 	public void update() {
