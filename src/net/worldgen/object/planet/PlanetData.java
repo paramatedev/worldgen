@@ -1,7 +1,5 @@
 package net.worldgen.object.planet;
 
-import java.util.Random;
-
 import net.worldgen.util.vector.Vector4f;
 
 public class PlanetData {
@@ -24,12 +22,12 @@ public class PlanetData {
 	
 	public PlanetData() {
 	}
-
-	public PlanetData(boolean hasWater, float amplitude, int seed, int octaves, float freq, float normalDetail,
+	
+	public PlanetData(boolean hasWater, float amplitude, float offset, int octaves, float freq, float normalDetail,
 			float waterAmplitude, float waterFreq) {
 		this.hasWater = hasWater;
 		this.amplitude = amplitude;
-		this.offset = new Random(seed).nextFloat() * Short.MAX_VALUE;
+		this.offset = offset;
 		this.octaves = octaves;
 		this.freq = freq;
 		this.normalDetail = normalDetail;

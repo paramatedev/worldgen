@@ -27,5 +27,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/worldgen/doc/lwjgl-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="jar/mysql-connector-java-5.1.42-bin.jar"/>
+	<classpathentry kind="lib" path="jar/sqlite-jdbc-3.14.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

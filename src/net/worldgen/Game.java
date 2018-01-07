@@ -205,11 +205,7 @@ public class Game implements Runnable {
 	}
 
 	private void shutdown() {
-		try {
-			handler.shutdownExecutor();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		handler.shutdown();
 		renderer.clearMemory();
 		Loader.clearMemory();
 

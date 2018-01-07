@@ -7,17 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.worldgen.object.planet.PlanetData;
+import net.worldgen.sql.Database;
 import net.worldgen.util.vector.Vector4f;
 
 public class DataInput implements WindowListener, ChangeListener, ActionListener {
@@ -25,12 +29,19 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 	private final int sliderCount = 7;
 	private final int colorCount = 5;
 
+	private Database database;
+
 	private JFrame frame;
 	private JPanel sliderPanel;
 	private JLabel[] label;
 	private JSlider[] slider;
 	private JPanel colorPanel;
 	private JButton[] color;
+	private JPanel dataPanel;
+	private JButton save;
+	private JButton load;
+	private JButton delete;
+	private JComboBox<String> box;
 
 	private float amplitude;
 	private float offset;
@@ -47,7 +58,9 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 	private Vector4f color4;
 	private Vector4f colorWater;
 
-	public DataInput() {
+	public DataInput(Database database) {
+		this.database = database;
+
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(this);
@@ -62,7 +75,7 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		slider = new JSlider[sliderCount];
 
 		// amplitude
-		slider[0] = new JSlider(JSlider.HORIZONTAL, 0, 1000, 500);
+		slider[0] = new JSlider(JSlider.HORIZONTAL, 0, 1000, 300);
 		slider[0].addChangeListener(this);
 		amplitude = slider[0].getValue() * 0.01f;
 		label[0] = new JLabel("Amplitude: " + amplitude);
@@ -74,31 +87,31 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		label[1] = new JLabel("Offset: " + (int) offset);
 
 		// octaves
-		slider[2] = new JSlider(JSlider.HORIZONTAL, 0, 16, 16);
+		slider[2] = new JSlider(JSlider.HORIZONTAL, 0, 16, 12);
 		slider[2].addChangeListener(this);
 		octaves = slider[2].getValue();
 		label[2] = new JLabel("Octaves: " + octaves);
 
 		// freq
-		slider[3] = new JSlider(JSlider.HORIZONTAL, 1, 1000, 260);
+		slider[3] = new JSlider(JSlider.HORIZONTAL, 1, 1000, 350);
 		slider[3].addChangeListener(this);
 		freq = slider[3].getValue() * 0.01f;
 		label[3] = new JLabel("Frequency: " + freq);
 
 		// normalDetail
-		slider[4] = new JSlider(JSlider.HORIZONTAL, 1, 500, 200);
+		slider[4] = new JSlider(JSlider.HORIZONTAL, 1, 500, 40);
 		slider[4].addChangeListener(this);
 		normalDetail = slider[4].getValue() * 0.0001f;
 		label[4] = new JLabel("Normal Detail: " + normalDetail);
 
 		// waterAmplitude
-		slider[5] = new JSlider(JSlider.HORIZONTAL, 1, 1000, 60);
+		slider[5] = new JSlider(JSlider.HORIZONTAL, 1, 1000, 25);
 		slider[5].addChangeListener(this);
 		waterAmplitude = slider[5].getValue() * 0.001f;
 		label[5] = new JLabel("Water Amplitude: " + waterAmplitude);
 
 		// waterFreq
-		slider[6] = new JSlider(JSlider.HORIZONTAL, 1, 10000, 1000);
+		slider[6] = new JSlider(JSlider.HORIZONTAL, 1, 10000, 1500);
 		slider[6].addChangeListener(this);
 		waterFreq = slider[6].getValue() * 0.1f;
 		label[6] = new JLabel("Water Frequency: " + waterFreq);
@@ -109,9 +122,9 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		}
 
 		colorPanel = new JPanel();
-		colorPanel.setLayout(new GridLayout(colorCount, 1, 0, 10));
+		colorPanel.setLayout(new GridLayout(colorCount, 1, 0, 0));
 		colorPanel.setBackground(Color.WHITE);
-		frame.add(colorPanel, BorderLayout.SOUTH);
+		frame.add(colorPanel, BorderLayout.CENTER);
 
 		color = new JButton[colorCount];
 
@@ -149,10 +162,31 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		color[4].addActionListener(this);
 		c = color[4].getBackground();
 		colorWater = new Vector4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 0.5f);
-		
+
 		for (int i = 0; i < colorCount; i++) {
 			colorPanel.add(color[i]);
 		}
+
+		dataPanel = new JPanel();
+		dataPanel.setLayout(new GridLayout(2, 2, 0, 0));
+		dataPanel.setBackground(Color.WHITE);
+		frame.add(dataPanel, BorderLayout.SOUTH);
+
+		save = new JButton("Save");
+		save.addActionListener(this);
+		dataPanel.add(save);
+
+		load = new JButton("Load");
+		load.addActionListener(this);
+		dataPanel.add(load);
+
+		box = new JComboBox<String>();
+		updateBox();
+		dataPanel.add(box);
+
+		delete = new JButton("Delete");
+		delete.addActionListener(this);
+		dataPanel.add(delete);
 
 		frame.pack();
 		frame.setVisible(true);
@@ -221,9 +255,62 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 			Color c = color[4].getBackground();
 			colorWater = new Vector4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 0.5f);
 		}
+
+		if (e.getSource().equals(save)) {
+			String name = JOptionPane.showInputDialog("Name your Planet");
+			while (name.equals(""))
+				name = JOptionPane.showInputDialog("Try again!");
+			boolean works = false;
+			while (!works) {
+				try {
+					works = database.addPlanet(name, applyData(new PlanetData()));
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				if (!works)
+					name = JOptionPane.showInputDialog("Name already taken!");
+			}
+			updateBox();
+		}
+
+		if (e.getSource().equals(load)) {
+			String name = (String) box.getSelectedItem();
+			if (name == null)
+				return;
+			try {
+				setData(database.getPlanet(name));
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		if (e.getSource().equals(delete)) {
+			String name = (String) box.getSelectedItem();
+			if (name == null)
+				return;
+			try {
+				database.deletePlanet(name);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			updateBox();
+		}
 	}
 
-	public void applyData(PlanetData data) {
+	private void updateBox() {
+		try {
+			String[] names = database.getAllPlanetNames();
+			box.removeAllItems();
+			for (String name : names)
+				box.addItem(name);
+			if (names.length != 0)
+				box.setSelectedIndex(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public PlanetData applyData(PlanetData data) {
 		data.setAmplitude(amplitude);
 		data.setOffset(offset);
 		data.setOctaves(octaves);
@@ -236,6 +323,22 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		data.setColor3(color3);
 		data.setColor4(color4);
 		data.setColorWater(colorWater);
+		return data;
+	}
+
+	private void setData(PlanetData data) {
+		amplitude = data.getAmplitude();
+		offset = data.getOffset();
+		octaves = data.getOctaves();
+		freq = data.getFreq();
+		normalDetail = data.getNormalDetail();
+		waterAmplitude = data.getWaterAmplitude();
+		waterFreq = data.getWaterFreq();
+		color1 = data.getColor1();
+		color2 = data.getColor2();
+		color3 = data.getColor3();
+		color4 = data.getColor4();
+		colorWater = data.getColorWater();
 	}
 
 	@Override

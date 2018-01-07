@@ -16,8 +16,8 @@ import net.worldgen.object.Entity;
 import net.worldgen.object.raw.Model;
 import net.worldgen.render.shader.EntityShader;
 import net.worldgen.render.shader.MeshShader;
-import net.worldgen.render.shader.SurfaceShader;
 import net.worldgen.render.shader.SkyboxShader;
+import net.worldgen.render.shader.SurfaceShader;
 import net.worldgen.render.shader.WaterShader;
 import net.worldgen.util.Maths;
 import net.worldgen.util.vector.Matrix4f;
@@ -33,13 +33,13 @@ public class RenderCore {
 	private WaterShader waterShader;
 	private SurfaceShader surfaceShader;
 	private PlanetRender planetRender;
-	
+
 	private MeshShader meshShader;
 	private MeshRender meshRender;
 
 	private SkyboxShader skyboxShader;
 	private SkyboxRender skyboxRender;
-	
+
 	private Matrix4f projectionMatrix;
 	private Map<Model, List<Entity>> entities = new HashMap<Model, List<Entity>>();
 	private boolean renderModel;
@@ -79,7 +79,7 @@ public class RenderCore {
 			entityShader.loadViewMatrix(handler.getCamera());
 			entityRender.render(handler, this.entities, projectionMatrix);
 			entityShader.stop();
-			
+
 			surfaceShader.start();
 			surfaceShader.loadViewMatrix(handler.getCamera());
 			planetRender.renderSurface(handler, handler.getPlanets(), projectionMatrix);
@@ -96,7 +96,7 @@ public class RenderCore {
 			meshRender.render(this.entities, handler.getPlanets(), projectionMatrix);
 			meshShader.stop();
 		}
-		
+
 		skyboxShader.start();
 		skyboxShader.loadViewMatrix(handler.getCamera(), dt);
 		skyboxRender.render(projectionMatrix);
@@ -126,7 +126,7 @@ public class RenderCore {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		enableCulling();
 	}
-	
+
 	public void updateProjectionMatrix(float fov, int width, int height) {
 		projectionMatrix = Maths.createProjectionMatrix(fov, NEAR_PLANE, FAR_PLANE, width, height);
 	}
