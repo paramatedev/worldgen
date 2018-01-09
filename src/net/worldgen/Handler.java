@@ -1,7 +1,6 @@
 package net.worldgen;
 
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +13,6 @@ import net.worldgen.object.Entity;
 import net.worldgen.object.Sun;
 import net.worldgen.object.planet.Planet;
 import net.worldgen.object.planet.PlanetData;
-import net.worldgen.sql.Database;
 import net.worldgen.util.vector.Vector3f;
 
 public class Handler {
@@ -27,7 +25,6 @@ public class Handler {
 	private List<Planet> planets;
 
 	private DataInput input;
-	private Database database;
 	
 	// Models
 	// private Model stall;
@@ -35,7 +32,8 @@ public class Handler {
 	public Handler() {
 		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-		camera = new Camera(new Vector3f(0, 160, 230), 35, 0, 0);
+		//camera = new Camera(new Vector3f(0, 160, 230), 35, 0, 0);
+		camera = new Camera(new Vector3f(232.28162f, 133.08798f, 137.25221f), 26.599968f, -60.000153f, 0);
 		dirLights = new ArrayList<DirectionLight>();
 		entities = new ArrayList<Entity>();
 		planets = new ArrayList<Planet>();
@@ -45,12 +43,8 @@ public class Handler {
 		sun = new Sun(null, new Vector3f(1, 1, 1), 1f);
 		dirLights.add(sun);
 		
-		try {
-			database = new Database();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		input = new DataInput(database);
+		
+		input = new DataInput();
 		
 		int max = 1;
 		for (int i = 1; i <= max; i++)
@@ -84,11 +78,6 @@ public class Handler {
 	public void shutdown() {
 		executor.shutdown();
 		input.dispose();
-		try {
-			database.disconnect();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		try {
 			if (!executor.awaitTermination(500, TimeUnit.MILLISECONDS))
 				executor.shutdownNow();

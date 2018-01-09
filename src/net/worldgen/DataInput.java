@@ -58,8 +58,12 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 	private Vector4f color4;
 	private Vector4f colorWater;
 
-	public DataInput(Database database) {
-		this.database = database;
+	public DataInput() {
+		try {
+			database = new Database();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -194,6 +198,11 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 
 	public void dispose() {
 		frame.dispose();
+		try {
+			database.disconnect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -258,6 +267,8 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 
 		if (e.getSource().equals(save)) {
 			String name = JOptionPane.showInputDialog("Name your Planet");
+			if(name == null)
+				return;
 			while (name.equals(""))
 				name = JOptionPane.showInputDialog("Try again!");
 			boolean works = false;
@@ -339,6 +350,29 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		color3 = data.getColor3();
 		color4 = data.getColor4();
 		colorWater = data.getColorWater();
+		slider[0].setValue((int) (amplitude * 100));
+		label[0].setText("Amplitude: " + amplitude);
+		slider[1].setValue((int) (offset * 0.5f));
+		label[1].setText("Offset: " + offset);
+		slider[2].setValue((int) (octaves));
+		label[2].setText("Octaves: " + octaves);
+		slider[3].setValue((int) (freq * 100));
+		label[3].setText("Frequency: " + freq);
+		slider[4].setValue((int) (normalDetail * 10000));
+		label[4].setText("Normal Detail: " + normalDetail);
+		slider[5].setValue((int) (waterAmplitude * 1000));
+		label[5].setText("Water Amplitude: " + waterAmplitude);
+		slider[6].setValue((int) (waterFreq * 10));
+		label[6].setText("Water Frequency: " + waterFreq);
+		color[0].setBackground(color(color1));
+		color[1].setBackground(color(color2));
+		color[2].setBackground(color(color3));
+		color[3].setBackground(color(color4));
+		color[4].setBackground(color(colorWater));
+	}
+
+	public Color color(Vector4f color) {
+		return new Color((int) (color.x * 255), (int) (color.y * 255), (int) (color.z * 255), (int) (color.w * 255));
 	}
 
 	@Override

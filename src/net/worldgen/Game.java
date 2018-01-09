@@ -25,7 +25,7 @@ public class Game implements Runnable {
 	public static float TT; // Ticktime
 	
 	// core
-	private final String VERSION = "0.2.0";
+	private final String VERSION = "0.3.0";
 	private Thread core;
 	private static boolean running;
 	private Options options;
