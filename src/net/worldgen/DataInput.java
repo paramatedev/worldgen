@@ -368,11 +368,15 @@ public class DataInput implements WindowListener, ChangeListener, ActionListener
 		color[1].setBackground(color(color2));
 		color[2].setBackground(color(color3));
 		color[3].setBackground(color(color4));
-		color[4].setBackground(color(colorWater));
+		color[4].setBackground(color(colorWater, 1));
 	}
 
 	public Color color(Vector4f color) {
 		return new Color((int) (color.x * 255), (int) (color.y * 255), (int) (color.z * 255), (int) (color.w * 255));
+	}
+	
+	public Color color(Vector4f color, float trans) {
+		return new Color((int) (color.x * 255), (int) (color.y * 255), (int) (color.z * 255), (int) (trans * 255));
 	}
 
 	@Override
